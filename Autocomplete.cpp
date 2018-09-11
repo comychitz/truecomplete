@@ -3,18 +3,17 @@
 #include <iostream>
 #include <fstream>
 
-static PrefixTree words_;
-
 namespace autocomplete {
 
-  static bool readDict(const std::string &file) {
+  static bool readDict(const std::string &file,
+                       PrefixTree &words) {
     std::ifstream f(file.c_str());
     if(!f.good()) {
       return false;
     }
     std::string line;
     while(std::getline(f, line)) {
-      words_.add(line);
+      words.add(line);
     }
     return true;
   }
@@ -32,21 +31,24 @@ namespace autocomplete {
     }
   }
 
-  std::set<std::string> complete(const std::string &prefix) {
-
-    std::set<std::string> ret;
-    if(words_.root.children.empty()) {
-      const std::string &dictFile = "./dict/words.txt";
-      if(!readDict(dictFile)) {
-        std::cout << "ERR> Failed to read dictionary file: " 
-                  << dictFile << std::endl;
-        return ret;
-      }
+  Completer::Completer() {
+    const std::string &dictFile = "./dict/words.txt";
+    if(!readDict(dictFile, dict_)) {
+      std::cout << "ERR> Failed to read dictionary file: " 
+                << dictFile << std::endl;
     }
+  }
+
+  Completer::~Completer() { }
+
+  std::set<std::string> Completer::complete(const std::string &prefix) { 
 
     // get raw listing of possibilities
-    const Node *node = words_.getPrefix(prefix); 
-    complete_(prefix, node, ret);
+    std::set<std::string> ret;
+    const Node *node = dict_.getPrefix(prefix); 
+    if(node) {
+      complete_(prefix, node, ret);
+    }
     return ret;
   }
 
