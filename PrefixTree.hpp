@@ -9,7 +9,7 @@ class Node {
   public:
     Node(char c) : val(c), word(false) { }
 
-    virtual ~Node() { }
+    ~Node() { }
 
     typedef std::unordered_map<char,Node*>  NodeMap;
 
@@ -38,6 +38,20 @@ class PrefixTree {
         } 
       }
       cur->word = true;
+    }
+
+    const Node *getPrefix(const std::string &prefix) const {
+
+      const Node *cur = &root;
+      for(long i = 0; i < prefix.size(); i++) {
+        Node::NodeMap::const_iterator child = cur->children.find(prefix[i]);
+        if(child != cur->children.end()) {
+          cur = child->second;
+        } else {
+          return NULL;
+        } 
+      }
+      return cur;
     }
 
     Node root;
