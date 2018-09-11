@@ -1,8 +1,8 @@
 #ifndef _PREFIX_TREE_H_
 #define _PREFIX_TREE_H_
 
+#include <map>
 #include <string>
-#include <unordered_map>
 
 class Node {
 
@@ -11,7 +11,7 @@ class Node {
 
     ~Node() { }
 
-    typedef std::unordered_map<char,Node*>  NodeMap;
+    typedef std::map<char,Node*>  NodeMap;
 
     char val;
     bool word;
@@ -25,7 +25,7 @@ class PrefixTree {
 
     ~PrefixTree() { }
 
-    void addToTree(const std::string &word) {
+    void add(const std::string &word) {
       Node *cur = &root;
       for(long i = 0; i < word.size(); i++) {
         Node::NodeMap::iterator child = cur->children.find(word[i]);
