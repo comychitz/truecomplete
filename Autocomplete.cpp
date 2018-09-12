@@ -19,7 +19,7 @@ namespace autocomplete {
   }
 
   static bool readRanks(const std::string &file,
-                        std::map<std::string,unsigned> ranks) {
+                        std::map<std::string,unsigned> &ranks) {
     std::ifstream f(file.c_str());
     if(!f.good()) {
       return false;
